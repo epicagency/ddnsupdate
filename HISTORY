@@ -1,6 +1,8 @@
 DDNS Update History
 ===================
 
+Version 0.1.5 (2011-09-08)
+  * Some DNS don't answer to SOA requests for hosts/subdomains (AEX I'm looking at you!) so we try domains recursively
 Version 0.1.1 (2011-09-08)
   * Don't output anything if nothing updated (will add a silent mode later)
 Version 0.1.0 (2011-09-08)

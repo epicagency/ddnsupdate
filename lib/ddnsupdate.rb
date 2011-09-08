@@ -15,18 +15,21 @@ module DDNSUpdate
   def self.determine_soa(zone)
     current = zone.gsub(/\.$/, "")
     soa = nil
-    while soa.nil? and (not current.nil? or not current.empty?)
+    while soa.nil? and !current.empty?
       soa = %x{dig -t SOA #{current} +noquestion +nostats +nocmd +noqr +nocomments +noadditional +nottlid}
       if not soa.nil?
         #Split lines into an array, filtering out comments and blanks
         soa = soa.split("\n").delete_if { |el| el.start_with?(";") || el.empty? }
         #Split remaining line into whitespace delimited fields
-        soa = soa[0].split(/\s/)
-        #Find the field we actually want, stripping the trailing dot
-        soa[soa.index("SOA") + 1].gsub(/\.$/, "")
-      else
-        current.sub! /^.*\./, ""
+        if not soa.empty?
+          soa = soa[0].split(/\s/)
+          #Find the field we actually want, stripping the trailing dot
+          soa = soa[soa.index("SOA") + 1].gsub(/\.$/, "")
+        else
+          soa = nil
+        end
       end
+      current.sub! /^.*?\./, ""
     end
     return soa
   end
