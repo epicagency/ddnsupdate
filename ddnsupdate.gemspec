@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Hugues Lismonde}]
-  s.date = %q{2011-09-08}
+  s.date = %q{2011-09-09}
   s.email = %q{hugues@epic.net}
   s.executables = [%q{ddnsupdate}]
   s.files = [%q{HISTORY}, %q{LICENSE}, %q{README.md}, %q{bin/ddnsupdate}, %q{lib/ddnsupdate.rb}]
