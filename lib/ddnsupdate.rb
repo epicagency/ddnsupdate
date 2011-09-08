@@ -13,13 +13,22 @@ module DDNSUpdate
   end
 
   def self.determine_soa(zone)
-    soa = %x{dig -t SOA #{zone.gsub(/\.$/, "")} +noquestion +nostats +nocmd +noqr +nocomments +noadditional +nottlid}
-    #Split lines into an array, filtering out comments and blanks
-    soa = soa.split("\n").delete_if { |el| el.start_with?(";") || el.empty? }
-    #Split remaining line into whitespace delimited fields
-    soa = soa[0].split(/\s/)
-    #Find the field we actually want, stripping the trailing dot
-    soa[soa.index("SOA") + 1].gsub(/\.$/, "")
+    current = zone.gsub(/\.$/, "")
+    soa = nil
+    while soa.nil? and (not current.nil? or not current.empty?)
+      soa = %x{dig -t SOA #{current} +noquestion +nostats +nocmd +noqr +nocomments +noadditional +nottlid}
+      if not soa.nil?
+        #Split lines into an array, filtering out comments and blanks
+        soa = soa.split("\n").delete_if { |el| el.start_with?(";") || el.empty? }
+        #Split remaining line into whitespace delimited fields
+        soa = soa[0].split(/\s/)
+        #Find the field we actually want, stripping the trailing dot
+        soa[soa.index("SOA") + 1].gsub(/\.$/, "")
+      else
+        current.sub! /^.*\./, ""
+      end
+    end
+    return soa
   end
 
   def self.determine_current_ip(zone, soa=nil)
@@ -44,6 +53,7 @@ module DDNSUpdate
 
   def self.update(zone, ip, key, wild = false)
     soa         = determine_soa(zone)
+    raise UpdateError, "can't find SOA for #{zone}" if soa.nil?
     curip       = determine_current_ip(zone, soa)
 
     if curip != ip
