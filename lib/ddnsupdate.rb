@@ -71,6 +71,9 @@ module DDNSUpdate
         err = stderr.read
         raise UpdateError, err unless err.empty?
       end
+      true
+    else
+      false
     end
   end
 end

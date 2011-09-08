@@ -40,8 +40,8 @@ EOS
       Trollop::die "missing key" if cmd_opts[:key].nil?
 
       ip = (cmd_opts[:remote] && determine_remote_ip) || determine_local_ip
-      update(cmd_opts[:host], ip, cmd_opts[:key], cmd_opts[:wild])
-      puts "Host updated with ip #{ip}"
+
+      puts "Host updated with ip #{ip}" if update(cmd_opts[:host], ip, cmd_opts[:key], cmd_opts[:wild])
     when "gen"
       cmd_opts = Trollop::options do
         banner <<-EOS
