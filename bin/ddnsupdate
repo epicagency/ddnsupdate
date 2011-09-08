@@ -1,0 +1,86 @@
+#!/usr/bin/env ruby
+
+$0 = 'ddnsupdate' # hide arguments from ps and top
+
+require 'rubygems'
+require 'trollop'
+
+require 'ddnsupdate'
+
+module DDNSUpdate
+
+  SUB_COMMANDS = %w(gen up ip)
+  Trollop::options do
+    banner <<-EOS
+ddnsupdate update your dynamic dns zone with your current local or remote IP
+
+Usage:
+  ddnsupdate <command> [options]
+  ddnsupdate gen -p <pass>
+  ddnsupdate up -h <host> -k <key> [options]
+  ddnsupdate ip [options]
+EOS
+    stop_on SUB_COMMANDS
+  end
+  cmd = ARGV.shift
+  case cmd
+    when "up"
+      cmd_opts = Trollop::options do
+        banner <<-EOS
+ddnsupdate update your dynamic dns zone with your current local or remote IP
+
+  ddnsupdate up -h <host> -k <key> [-r] [-w]
+EOS
+        opt :key, "DNS Key", :short => "-k", :type => :string
+        opt :host, "Hostname to update", :short => "-h", :type => :string
+        opt :remote, "Use remote IP (default: local ip)", :short => "-r"
+        opt :wild, "Add a wildcard on the same IP (i.e. *.host IN A ip)", :short => "-w"
+      end
+      Trollop::die "missing host" if cmd_opts[:host].nil?
+      Trollop::die "missing key" if cmd_opts[:key].nil?
+
+      ip = (cmd_opts[:remote] && determine_remote_ip) || determine_local_ip
+      update(cmd_opts[:host], ip, cmd_opts[:key], cmd_opts[:wild])
+      puts "Host updated with ip #{ip}"
+    when "gen"
+      cmd_opts = Trollop::options do
+        banner <<-EOS
+ddnsupdate update your dynamic dns zone with your current local or remote IP
+
+  ddnsupdate gen -p <pass> [-b host]
+EOS
+        opt :pass, "Password to hash", :short => "-p", :type => :string
+        opt :bind, "Output as a bind key definition", :short => "-b", :type => :string
+      end
+      Trollop::die "missing password" if cmd_opts[:pass].nil?
+      key = keygen(cmd_opts[:pass]).strip
+      if cmd_opts[:bind].nil?
+        puts "Key: #{key}"
+      else
+        bind = <<-EOS
+key "#{cmd_opts[:bind]}." {
+  algorithm hmac-md5;
+  secret "#{key}";
+};
+EOS
+        puts bind
+      end
+    when "ip"
+      cmd_opts = Trollop::options do
+        banner <<-EOS
+ddnsupdate update your dynamic dns zone with your current local or remote IP
+
+  ddnsupdate ip [-r]
+EOS
+        opt :remote, "Display remote ip instead of local", :short => "-r"
+      end
+      if cmd_opts[:remote]
+        puts determine_remote_ip
+      else
+        puts determine_local_ip
+      end
+    else
+      cmd_opts = Trollop::die "unknown subcommand #{cmd.inspect}"
+  end
+
+end
