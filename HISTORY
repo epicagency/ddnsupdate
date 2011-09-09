@@ -1,6 +1,9 @@
 DDNS Update History
 ===================
 
+Version 0.1.6 (2011-09-09)
+  * README update
+  * gem dependencies updated
 Version 0.1.5 (2011-09-08)
   * Some DNS don't answer to SOA requests for hosts/subdomains (AEX I'm looking at you!) so we try domains recursively
 Version 0.1.1 (2011-09-08)

@@ -7,7 +7,7 @@ host with optionnal wildcard) but it may change over time.
 
 **Author**:    [Hugues Lismonde](mailto:ryan@wonko.com)
 
-**Version**:   0.1.5 (2011-09-09)
+**Version**:   0.1.6 (2011-09-09)
 
 **Copyright**: Copyright (c) 2011 Hugues Lismonde. All rights reserved.
 
