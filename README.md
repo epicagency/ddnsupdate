@@ -45,6 +45,7 @@ ddnsupdate <command> [options]
     --bind, -b <s>:   Output as a bind key definition
 
 **IP options:**
+
       --remote, -r:   Display remote ip instead of local
 
 Usage example
