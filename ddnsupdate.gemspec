@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %q{ddnsupdate}
-  s.version = "0.1.6"
+  s.version = "0.2.0"
   s.description = <<-EOF
 DDNSUpdate is a wrapper around nsupdate to facilitate dynamic dns updates
 EOF

@@ -38,6 +38,7 @@ ddnsupdate <command> [options]
     --host, -h <s>:   Hostname to update
       --remote, -r:   Use remote IP (default: local ip)
         --wild, -w:   Add a wildcard on the same IP (i.e. *.host IN A ip)
+         --soa, -s:   Specify soa/server to update instead of trying to autodetect
 
 **Generate options:**
 
@@ -61,7 +62,7 @@ use.
 
 After your setup is complete, periodicaly run:
 
-    ddnsupdate up -h <hostname> -k <password>
+    ddnsupdate up -h <hostname> -k <key>
 
 This will update <hostname> with your local ip (usefull for testing on a
 local network). If you want it to be your remote IP simply add `-r`.

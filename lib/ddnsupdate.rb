@@ -15,7 +15,7 @@ module DDNSUpdate
   def self.determine_soa(zone)
     current = zone.gsub(/\.$/, "")
     soa = nil
-    while soa.nil? and !current.empty?
+    while soa.nil? and not current.match /\.*\..*/
       soa = %x{dig -t SOA #{current} +noquestion +nostats +nocmd +noqr +nocomments +noadditional +nottlid}
       if not soa.nil?
         #Split lines into an array, filtering out comments and blanks
@@ -54,8 +54,8 @@ module DDNSUpdate
     Net::HTTP.get(URI.parse('http://www.whatismyip.org/'))
   end
 
-  def self.update(zone, ip, key, wild = false)
-    soa         = determine_soa(zone)
+  def self.update(zone, ip, key, wild = false, soa = nil)
+    soa         = determine_soa(zone) if soa.nil?
     raise UpdateError, "can't find SOA for #{zone}" if soa.nil?
     curip       = determine_current_ip(zone, soa)
 

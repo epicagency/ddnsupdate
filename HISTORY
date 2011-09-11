@@ -1,6 +1,8 @@
 DDNS Update History
 ===================
 
+Version 0.2.0 (2011-09-11)
+  * Added static SOA support for DNS that doesn't answer SOA queries (cheap residential routers, ...)
 Version 0.1.6 (2011-09-09)
   * README update
   * gem dependencies updated

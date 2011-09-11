@@ -35,13 +35,14 @@ EOS
         opt :host, "Hostname to update", :short => "-h", :type => :string
         opt :remote, "Use remote IP (default: local ip)", :short => "-r"
         opt :wild, "Add a wildcard on the same IP (i.e. *.host IN A ip)", :short => "-w"
+        opt :soa, "Use soa instead of trying to detect it", :short => "-s", :type => :string
       end
       Trollop::die "missing host" if cmd_opts[:host].nil?
       Trollop::die "missing key" if cmd_opts[:key].nil?
 
       ip = (cmd_opts[:remote] && determine_remote_ip) || determine_local_ip
 
-      puts "Host updated with ip #{ip}" if update(cmd_opts[:host], ip, cmd_opts[:key], cmd_opts[:wild])
+      puts "Host updated with ip #{ip}" if update(cmd_opts[:host], ip, cmd_opts[:key], cmd_opts[:wild], cmd_opts[:soa])
     when "gen"
       cmd_opts = Trollop::options do
         banner <<-EOS
